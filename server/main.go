@@ -1,57 +1,38 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
+	"goChat/control"
 	"goChat/db"
+	"goChat/util"
 	"net/http"
 )
 
-//字段首字母一定要大写
+//请求拦截
+func handleIntercept(h http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		header := r.Header
 
-type BaseResponse struct {
-	Code int         `json:"code"`
-	Msg  string      `json:"msg"`
-	Data interface{} `json:"data,omitempty"`
+		userToken := header.Get("token")
+
+		if userToken == "" {
+			util.Resp(w, 500, nil, util.I18n())
+		}
+		h(w, r)
+	}
 }
 
+//主函数
 func main() {
-	//请求接收
-	http.HandleFunc("/user/login", UserLogin)
-	//启动web服务器
-	_ = http.ListenAndServe(":8090", nil)
+	// 链接数据库
 	db.InitDb()
 
-}
+	//请求接收
+	http.HandleFunc("/user/login", handleIntercept(control.UserLogin))
+	http.HandleFunc("/user/register", handleIntercept(control.UserRegister))
 
-func UserLogin(writer http.ResponseWriter, request *http.Request) {
-	writer.Header().Set("Content-Type", "application/json")
-	writer.WriteHeader(http.StatusOK)
-	_ = request.ParseForm()
-	phoneNumber := request.PostForm.Get("phoneNumber")
-	password := request.PostForm.Get("password")
-	if phoneNumber == "18328023227" && password == "123456" {
-		obj := make(map[string]interface{})
-		obj["id"] = 1
-		obj["token"] = "yes"
-		Resp(writer, 500, obj, "登录成功")
-	} else {
-		Resp(writer, 500, nil, "用户名或密码错误")
-	}
-}
-func Resp(writer http.ResponseWriter, code int, data interface{}, msg string) {
-	result := BaseResponse{
-		Data: data,
-		Code: code,
-		Msg:  msg,
-	}
-	resultStrJson, err := json.Marshal(result)
-	if err != nil {
-		fmt.Println(err)
-	}
-	_, _ = writer.Write(resultStrJson)
-}
-
-func RegisterView() {
+	//启动web服务器
+	_ = http.ListenAndServe(":8090", nil)
 
 }

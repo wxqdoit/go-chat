@@ -3,7 +3,6 @@ package main
 import (
 	"goChat/control"
 	"goChat/db"
-	"goChat/util"
 	"net/http"
 )
 
@@ -15,9 +14,9 @@ func handleIntercept(h http.HandlerFunc) http.HandlerFunc {
 		header := r.Header
 
 		userToken := header.Get("token")
-
+		println(userToken)
 		if userToken == "" {
-			util.Resp(w, 500, nil, util.I18n())
+			//util.Resp(w, 500, nil, util.I18n())
 		}
 		h(w, r)
 	}
@@ -25,7 +24,7 @@ func handleIntercept(h http.HandlerFunc) http.HandlerFunc {
 
 //主函数
 func main() {
-	// 链接数据库
+	// 连接数据库
 	db.InitDb()
 
 	//请求接收

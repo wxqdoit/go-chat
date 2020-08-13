@@ -11,7 +11,7 @@ type User struct {
 	Nickname string    `xorm:"varchar(20)" form:"nickname" json:"nickname"`
 	Salt     string    `xorm:"varchar(10)" form:"salt" json:"-"`
 	Online   int       `xorm:"int(10)" form:"online" json:"online"`
-	Token    string    `xorm:"varchar(40)" form:"token" json:"token"`
+	Token    string    `xorm:"varchar(256)" form:"token" json:"token"`
 	Memo     string    `xorm:"varchar(140)" form:"memo" json:"memo"`
 	CreateAt time.Time `xorm:"datetime" form:"createat" json:"createat"`
 }

@@ -20,7 +20,7 @@ func InitDb() {
 	} else {
 		Engine.ShowSQL(true)
 		Engine.SetMaxOpenConns(2) //设置数据库最大连接数
-		_ = Engine.Sync2(new(model.User))
-		println("init ok")
+		_ = Engine.Sync2(new(model.User), new(model.Community), new(model.Contact))
+		println("database init successful")
 	}
 }

@@ -1,11 +1,14 @@
 package main
 
 import (
-	"fmt"
 	"goChat/control"
 	"goChat/db"
 	"goChat/util"
 	"net/http"
+)
+
+const (
+	PORT = ":9090"
 )
 
 //请求拦截
@@ -14,17 +17,16 @@ func handleIntercept(h http.HandlerFunc) http.HandlerFunc {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 		userToken := r.Header.Get("token")
+		//是否有token
 		if userToken == "" {
 			util.Resp(w, 500, nil, util.IText.PERMISSION_DENY)
 		} else {
-			c, err := util.ParseToken(userToken)
-			fmt.Println("----userToken-----")
-			fmt.Print(c, err)
-			fmt.Println("----userToken-----")
+			_, err := util.ParseToken(userToken)
+			//是否过期
 			if err == nil {
 				h(w, r)
 			} else {
-				util.Resp(w, 500, nil, error.Error(err))
+				util.Resp(w, 500, nil, util.IText.TOKEN_EXPIRED)
 			}
 		}
 	}
@@ -47,6 +49,6 @@ func main() {
 	ApiInit()
 
 	//启动web服务器
-	_ = http.ListenAndServe(":8090", nil)
+	_ = http.ListenAndServe(PORT, nil)
 
 }

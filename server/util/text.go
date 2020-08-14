@@ -7,6 +7,9 @@ type Text struct {
 	LOGIN_SUCCESS    string
 	REGISTER_SUCCESS string
 	PERMISSION_DENY  string
+	TOKEN_EXPIRED    string
+	CAN_NOT_TAOWA    string
+	HAS_BEING_FRIEND string
 }
 
 var zh *Text = &Text{
@@ -16,14 +19,20 @@ var zh *Text = &Text{
 	LOGIN_SUCCESS:    "登录成功",
 	REGISTER_SUCCESS: "注册成功",
 	PERMISSION_DENY:  "无权限",
+	TOKEN_EXPIRED:    "登录过期",
+	CAN_NOT_TAOWA:    "禁止套娃加自己为好友哦",
+	HAS_BEING_FRIEND: "不能当复读机重复添加哟",
 }
 var en *Text = &Text{
 	USER_EXIST:       "User existed!",
 	USER_NOT_EXIST:   "User not exist",
 	USER_ERROR:       "Username or password error",
-	LOGIN_SUCCESS:    "login success",
-	REGISTER_SUCCESS: "register success",
-	PERMISSION_DENY:  "permission deny",
+	LOGIN_SUCCESS:    "Login success",
+	REGISTER_SUCCESS: "Register success",
+	PERMISSION_DENY:  "Permission deny",
+	TOKEN_EXPIRED:    "Token is expired",
+	CAN_NOT_TAOWA:    "Cannot add yourself",
+	HAS_BEING_FRIEND: "Already friends",
 }
 
 func I18n(lang string) (z *Text) {
